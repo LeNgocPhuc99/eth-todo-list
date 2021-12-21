@@ -1,50 +1,37 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
-import "bootstrap/dist/css/bootstrap.css";
+import TodoList from '../abis/TodoList.json';
+//import "bootstrap/dist/css/bootstrap.css";
 
 function App(props) {
-  const [web3, setWeb3] = useState();
   const [account, setAccount] = useState();
-
-  const connectWeb3 = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-
-    var web3;
-    if (window.ethereum) {
-      web3 = new Web3(window.ethereum);
-      try {
-        // request account access
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        console.log("web3 connected....");
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (window.web3) {
-      // use MetaMask's provide
-      web3 = window.web3;
-      console.log("Injected web3 detected....");
-    }
-
-    return web3;
-  };
-
-  const connectWallet = async (e) => {
-    const web3 = await connectWeb3(e);
-    setWeb3(web3);
-    const accounts = await web3.eth.getAccounts();
-    console.log(web3);
-    console.log(accounts[0]);
-  };
-
+  const [todoListContract, setTodoListContract] = useState('');
   useEffect(() => {
-    if (window.ethereum.isConnected()) {
-      connectWallet();
-    }
+    const ethEnable = async () => {
+      loadBlockchainData();
+    };
+    ethEnable();
   }, []);
 
-  return <div></div>;
+  const loadBlockchainData = async () => {
+    if (window.ethereum) {
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      window.web3 = new Web3(window.ethereum);
+
+      // connect to metamask
+      let web3 = window.web3;
+      const accounts = await web3.eth.getAccounts();
+      setAccount(accounts[0]);
+    } else if (!window.web3) {
+      window.alert("MetaMask is not detected");
+    }
+  };
+
+  return (
+    <div>
+      <p>{account}</p>
+    </div>
+  );
 }
 
 export default App;

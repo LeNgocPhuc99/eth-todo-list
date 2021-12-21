@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   networks: {
     development: {
@@ -7,6 +9,8 @@ module.exports = {
     },
   },
   mocha: {},
+  contracts_directory: path.join(__dirname, 'contracts'),
+  contracts_build_directory: path.join(__dirname, 'src/abis'),
   compilers: {
     solc: {
       version: "0.8.10",
