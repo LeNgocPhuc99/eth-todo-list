@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: path.join(__dirname, "src/js", "App.js"),
+  entry: path.join(__dirname, "src/js", "index.js"),
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "src/dist"),
@@ -37,14 +37,20 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("development"),
-    }),
-    new webpack.DefinePlugin({
-      "process.env.NODE_DEBUG": JSON.stringify("development"),
-    }),
+    // new webpack.DefinePlugin({
+    //   "process.env.NODE_ENV": JSON.stringify("development"),
+    // }),
+    // new webpack.DefinePlugin({
+    //   "process.env.NODE_DEBUG": JSON.stringify("development"),
+    // }),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
     }),
+    new webpack.ProvidePlugin({
+      "React": "react",
+   }),
+   new webpack.ProvidePlugin({
+    process: 'process/browser',
+}),
   ],
 };

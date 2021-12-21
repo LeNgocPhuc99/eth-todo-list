@@ -1,25 +1,50 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { useState, useEffect } from "react";
 import Web3 from "web3";
+import "bootstrap/dist/css/bootstrap.css";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.web3 = new Web3('http://localhost:8545');
-    this.web3.eth.getAccounts(console.log);
-  }
+function App(props) {
+  const [web3, setWeb3] = useState();
+  const [account, setAccount] = useState();
 
-  render() {
-    return (
-      <div className="row">
-        <div className="col-lg-12 text-center">
-          <h1>Ethereum Todo List</h1>
-          <br />
-          <p className="text-center">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  const connectWeb3 = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    var web3;
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      try {
+        // request account access
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        console.log("web3 connected....");
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (window.web3) {
+      // use MetaMask's provide
+      web3 = window.web3;
+      console.log("Injected web3 detected....");
+    }
+
+    return web3;
+  };
+
+  const connectWallet = async (e) => {
+    const web3 = await connectWeb3(e);
+    setWeb3(web3);
+    const accounts = await web3.eth.getAccounts();
+    console.log(web3);
+    console.log(accounts[0]);
+  };
+
+  useEffect(() => {
+    if (window.ethereum.isConnected()) {
+      connectWallet();
+    }
+  }, []);
+
+  return <div></div>;
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+export default App;
