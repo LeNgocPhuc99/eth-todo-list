@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
 import TodoList from "../abis/TodoList.json";
-//import "bootstrap/dist/css/bootstrap.css";
+import TaskList from "./components/TaskList";
+import "../css/App.css";
 
 function App(props) {
   const [account, setAccount] = useState();
@@ -9,7 +10,7 @@ function App(props) {
   const [todoListContract, setTodoListContract] = useState("");
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
-  const [appStatus, setAppStatus] = useState(true);
+  const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
     const ethEnable = async () => {
@@ -56,12 +57,34 @@ function App(props) {
     } else if (!window.web3) {
       window.alert("MetaMask is not detected");
     }
+    setAppLoading(false);
+  };
+
+  const createTask = (_content) => {
+    setAppLoading(true);
+    todoListContract.methods
+      .createTask(_content)
+      .send({ from: account })
+      .on("receipt", (receipt) => {
+        setAppLoading(false);
+      });
   };
 
   return (
     <div>
-      <p>{account}</p>
-      <p>{taskCount}</p>
+      <div className="container-fluid">
+        <div className="row">
+          <main role="main" className="col-lg-12 d-flex justify-content-center">
+            {appLoading ? (
+              <div id="loader" className="text-center">
+                <p className="text-center">Loading...</p>
+              </div>
+            ) : (
+              <TaskList tasks={tasks} createTask={createTask} />
+            )}
+          </main>
+        </div>
+      </div>
     </div>
   );
 }
