@@ -12,10 +12,18 @@ contract TodoList {
     mapping(uint256 => Task) public tasks;
 
     event TaskCreated(uint256, string, bool);
+    event TaskCompleted(uint256, bool);
 
     function createTask(string memory _content) public {
         taskCount++;
         tasks[taskCount] = Task(taskCount, _content, false);
         emit TaskCreated(taskCount, _content, false);
+    }
+
+    function toggleCompleted(uint256 _id) public {
+        Task memory _task = tasks[_id];
+        _task.done = !_task.done;
+        tasks[_id] = _task;
+        emit TaskCompleted(_id, _task.done);
     }
 }

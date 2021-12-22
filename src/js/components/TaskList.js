@@ -23,7 +23,6 @@ const TaskList = (props) => {
           onChange={inputChangeHandler}
           value={taskContent}
         />
-        <input type="submit" hidden={true} />
       </form>
       <ul id="taskList" className="list-unstyled">
         {props.tasks.map((task, key) => {
@@ -34,6 +33,9 @@ const TaskList = (props) => {
                   type="checkbox"
                   name={task.id}
                   defaultChecked={task.done}
+                  onClick={(event) => {
+                      props.toggleCompleted(task.id);
+                  }}
                 />
                 <span className="content">{task.content}</span>
               </label>
@@ -41,7 +43,6 @@ const TaskList = (props) => {
           );
         })}
       </ul>
-      <ul id="completedTaskList" className="list-unstyled"></ul>
     </div>
   );
 };

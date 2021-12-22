@@ -4,7 +4,6 @@ import TodoList from "../abis/TodoList.json";
 import TaskList from "./components/TaskList";
 import "../css/App.css";
 
-
 function App(props) {
   const [account, setAccount] = useState();
   const [todoListContract, setTodoListContract] = useState("");
@@ -45,7 +44,7 @@ function App(props) {
         // load tasks list
         for (let i = 1; i <= taskCount; i++) {
           const task = await todoListContract.methods.tasks(i).call();
-          setTasks(tasks => [...tasks, task]);
+          setTasks((tasks) => [...tasks, task]);
         }
       } else {
         setAppStatus(false);
@@ -69,6 +68,16 @@ function App(props) {
       });
   };
 
+  const toggleCompleted = (_id) => {
+    setAppLoading(true);
+    todoListContract.methods
+      .toggleCompleted(_id)
+      .send({ from: account })
+      .on("receipt", (receipt) => {
+        setAppLoading(false);
+      });
+  };
+
   return (
     <div>
       <div className="container-fluid">
@@ -79,7 +88,7 @@ function App(props) {
                 <p className="text-center">Loading...</p>
               </div>
             ) : (
-              <TaskList tasks={tasks} createTask={createTask} />
+              <TaskList tasks={tasks} createTask={createTask} toggleCompleted={toggleCompleted} />
             )}
           </main>
         </div>
