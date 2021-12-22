@@ -10,32 +10,28 @@ contract TodoList {
         bool done;
     }
 
-    uint256 lastTaskId;
+    uint256 public taskCount = 0;
     mapping(uint256 => Task) tasks;
-    uint256[] taskIds;
 
     event TaskCreated(uint256, uint256, string, string, bool);
 
-    constructor() {
-        lastTaskId = 0;
-    }
+    constructor() {}
 
     modifier taskExist(uint256 _id) {
-        require(_id >= 0 && _id <= lastTaskId, "Task don't exist!!");
+        require(_id > 0 && _id <= taskCount, "Task don't exist!!");
         _;
     }
 
     function createTask(string memory _content, string memory _author) public {
-        lastTaskId++;
-        tasks[lastTaskId] = Task(
-            lastTaskId,
+        taskCount++;
+        tasks[taskCount] = Task(
+            taskCount,
             block.timestamp,
             _content,
             _author,
             false
         );
-        taskIds.push(lastTaskId);
-        emit TaskCreated(lastTaskId, block.timestamp, _content, _author, false);
+        emit TaskCreated(taskCount, block.timestamp, _content, _author, false);
     }
 
     function getTask(uint256 _id)
@@ -57,9 +53,5 @@ contract TodoList {
             tasks[_id].author,
             tasks[_id].done
         );
-    }
-
-    function getTaskIds() public view returns (uint256[] memory) {
-        return taskIds;
     }
 }
