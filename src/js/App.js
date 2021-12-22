@@ -8,6 +8,7 @@ function App(props) {
   const [network, setNetwork] = useState({ id: "0" });
   const [todoListContract, setTodoListContract] = useState("");
   const [taskCount, setTaskCount] = useState(0);
+  const [tasks, setTasks] = useState([]);
   const [appStatus, setAppStatus] = useState(true);
 
   useEffect(() => {
@@ -29,17 +30,23 @@ function App(props) {
       const networkId = await web3.eth.net.getId();
       setNetwork({ ...network, id: networkId });
 
-      // load TodoList Contract
       const todoListData = TodoList.networks[networkId];
       if (todoListData) {
+        // load TodoList Contract
         let web3 = window.web3;
         const todoListContract = new web3.eth.Contract(
           TodoList.abi,
           todoListData.address
         );
         setTodoListContract(todoListContract);
+
         const taskCount = await todoListContract.methods.taskCount().call();
-        console.log(taskCount);
+        setTaskCount(taskCount);
+        // load tasks list
+        for (let i = 1; i <= taskCount; i++) {
+          const task = await todoListContract.methods.tasks(i).call();
+          setTasks(...tasks, task);
+        }
       } else {
         setAppStatus(false);
         window.alert(
@@ -54,6 +61,7 @@ function App(props) {
   return (
     <div>
       <p>{account}</p>
+      <p>{taskCount}</p>
     </div>
   );
 }
