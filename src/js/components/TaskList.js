@@ -1,47 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const TaskList = (props) => {
   const [taskContent, setTaskContent] = useState("");
 
-  const inputChangeHandler = (event) => {
-    event.preventDefault();
-    setTaskContent(event.target.value);
+  const inputValue = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    props.createTask(inputValue.current.value);
+  };
+
+  const handleClick = (taskId) => {
+    props.toggleCompleted(taskId);
   };
 
   return (
     <div id="content">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          props.createTask(taskContent);
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <input
           id="newTask"
+          ref={inputValue}
           type="text"
           placeholder="Add task..."
-          onChange={inputChangeHandler}
-          value={taskContent}
+          required
         />
       </form>
-      <ul id="taskList" className="list-unstyled">
-        {props.tasks.map((task, key) => {
-          return (
-            <div className="taskTemplate" className="checkbox" key={key}>
-              <label>
-                <input
-                  type="checkbox"
-                  name={task.id}
-                  defaultChecked={task.done}
-                  onClick={(event) => {
-                      props.toggleCompleted(task.id);
-                  }}
-                />
-                <span className="content">{task.content}</span>
-              </label>
-            </div>
-          );
-        })}
+
+      <ul className="list-unstyled">
+        {props.tasks.map((task, key) => (
+          <li
+            id={task.done ? "completedTaskList" : "taskList"}
+            className="taskTemplate checkbox"
+            key={key}
+          >
+            <label>
+              <input
+                type="checkbox"
+                name={task.id}
+                defaultChecked={task.done}
+                onClick={() => handleClick(task.id)}
+              />{" "}
+              <span className="content">{task.content}</span>
+            </label>
+          </li>
+        ))}
       </ul>
     </div>
   );

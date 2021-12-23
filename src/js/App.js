@@ -80,6 +80,27 @@ function App(props) {
 
   return (
     <div>
+      <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a
+          className="navbar-brand col-sm-3 col-md-2 mr-0"
+          href="https://github.com/LeNgocPhuc99"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ethereum Todo List
+        </a>
+        <ul className="navbar-nav px-3">
+          <li className="nav-item text-nowrap d-sm-block">
+            <small className="nav-link">
+              <span id="account">Your's account: {account}</span>
+            </small>
+          </li>
+        </ul>
+      </nav>
+      <br />
+      <br />
+      <br />
+
       <div className="container-fluid">
         <div className="row">
           <main role="main" className="col-lg-12 d-flex justify-content-center">
@@ -88,7 +109,11 @@ function App(props) {
                 <p className="text-center">Loading...</p>
               </div>
             ) : (
-              <TaskList tasks={tasks} createTask={createTask} toggleCompleted={toggleCompleted} />
+              <TaskList
+                tasks={tasks}
+                createTask={createTask}
+                toggleCompleted={toggleCompleted}
+              />
             )}
           </main>
         </div>
