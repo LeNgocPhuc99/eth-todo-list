@@ -1,32 +1,14 @@
-main {
-  margin-top: 60px;
+.todo-app {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  width: 520px;
+  min-height: 520px;
+  background: #161a2b;
+  text-align: center;
+  margin: 100px auto;
+  border-radius: 10px;
+  padding-bottom: 32px;
+  padding-top: 32px;
 }
 
-form {
-  width: 500px;
-  margin-bottom: 10px;
-}
-
-form > *:last-child {
-  margin-top: 10px;
-}
-
-ul {
-  margin-bottom: 0px;
-}
-
-#completedTaskList .content {
-  color: grey;
-  text-decoration: line-through;
-}
-
-
-@media (max-width: 720px) {
-  main {
-      margin-top: 120px;
-  }
-
-  form {
-      width: 350px;
-  }
-}

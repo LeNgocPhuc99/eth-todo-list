@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import Web3 from "web3";
 import TodoList from "../abis/TodoList.json";
-import TaskList from "./components/TaskList";
+import TodoForm from "./components/TodoForm";
+import TodoTasks from "./components/TodoTasks";
 import "../css/App.css";
 
-function App(props) {
+function App() {
   const [account, setAccount] = useState();
   const [todoListContract, setTodoListContract] = useState("");
-  const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
   const [appLoading, setAppLoading] = useState(true);
 
@@ -40,7 +40,7 @@ function App(props) {
         setTodoListContract(todoListContract);
 
         const taskCount = await todoListContract.methods.taskCount().call();
-        setTaskCount(taskCount);
+        // setTaskCount(taskCount);
         // load tasks list
         for (let i = 1; i <= taskCount; i++) {
           const task = await todoListContract.methods.tasks(i).call();
@@ -79,45 +79,9 @@ function App(props) {
   };
 
   return (
-    <div>
-      <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a
-          className="navbar-brand col-sm-3 col-md-2 mr-0"
-          href="https://github.com/LeNgocPhuc99"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Ethereum Todo List
-        </a>
-        <ul className="navbar-nav px-3">
-          <li className="nav-item text-nowrap d-sm-block">
-            <small className="nav-link">
-              <span id="account">Your's account: {account}</span>
-            </small>
-          </li>
-        </ul>
-      </nav>
-      <br />
-      <br />
-      <br />
-
-      <div className="container-fluid">
-        <div className="row">
-          <main role="main" className="col-lg-12 d-flex justify-content-center">
-            {appLoading ? (
-              <div id="loader" className="text-center">
-                <p className="text-center">Loading...</p>
-              </div>
-            ) : (
-              <TaskList
-                tasks={tasks}
-                createTask={createTask}
-                toggleCompleted={toggleCompleted}
-              />
-            )}
-          </main>
-        </div>
-      </div>
+    <div className="todo-app">
+      <TodoForm createTask={createTask} />
+      <TodoTasks tasks={tasks} toggleCompleted={toggleCompleted} />
     </div>
   );
 }
